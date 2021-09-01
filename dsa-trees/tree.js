@@ -14,21 +14,37 @@ class Tree {
 
   /** sumValues(): add up all of the values in the tree. */
 
-  sumValues() {
-    
+  sumValues(node = this.root) {
+    if(!node) return 0
+
+    return node.children.reduce( (sum, child) => {
+      return sum + this.sumValues(child)
+    }, node.val)
   }
 
   /** countEvens(): count all of the nodes in the tree with even values. */
 
-  countEvens() {
+  countEvens(node = this.root) {
+    if(!node) return 0
 
+    const nodeIsEven = Number(!(node.val%2))
+
+    return node.children.reduce( (evens, child) => {
+      return evens + this.countEvens(child)
+    },  nodeIsEven)
   }
 
   /** numGreater(lowerBound): return a count of the number of nodes
    * whose value is greater than lowerBound. */
 
-  numGreater(lowerBound) {
+  numGreater(lowerBound, node=this.root) {
+    if(!node) return 0
 
+    const isGreater = Number( node.val > lowerBound )
+
+    return node.children.reduce( (biggerNums, child) => {
+      return biggerNums + this.numGreater(lowerBound, child)
+    }, isGreater)
   }
 }
 
