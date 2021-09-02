@@ -1,3 +1,6 @@
+const Stack = require("./stack")
+const Queue = require("./queue")
+
 class Node {
   constructor(value, adjacent = new Set()) {
     this.value = value;
@@ -10,26 +13,86 @@ class Graph {
     this.nodes = new Set();
   }
 
-  // this function accepts a Node instance and adds it to the nodes property on the graph
-  addVertex(vertex) {}
+  /* this function accepts a Node instance and adds it to the
+  nodes property on the graph */
+  addVertex(vertex) {
+    this.nodes.add(vertex)
+  }
 
-  // this function accepts an array of Node instances and adds them to the nodes property on the graph
-  addVertices(vertexArray) {}
+  /* this function accepts an array of Node instances and adds
+  them to the nodes property on the graph */
+  addVertices(vertexArray) {
+    for( let vertex of vertexArray ) this.addVertex(vertex)
+  }
 
-  // this function accepts two vertices and updates their adjacent values to include the other vertex
-  addEdge(v1, v2) {}
+  /* this function accepts two vertices and updates their adjacent
+  values to include the other vertex */
+  addEdge(v1, v2) {
+    v1.adjacent.add(v2)
+    v2.adjacent.add(v1)
+  }
 
-  // this function accepts two vertices and updates their adjacent values to remove the other vertex
-  removeEdge(v1, v2) {}
+  /* this function accepts two vertices and updates their
+  adjacent values to remove the other vertex */
+  removeEdge(v1, v2) {
+    v1.adjacent.delete(v2)
+    v2.adjacent.delete(v1)
+  }
 
-  // this function accepts a vertex and removes it from the nodes property, it also updates any adjacency lists that include that vertex
-  removeVertex(vertex) {}
+  /* this function accepts a vertex and removes it from the
+  nodes property, it also updates any adjacency lists that
+  include that vertex */
+  removeVertex(vertex) {
+    this.nodes.delete(vertex)
+  }
 
   // this function returns an array of Node values using DFS
-  depthFirstSearch(start) {}
+  depthFirstSearch(start) {
+    const history = new Set()
+    const path = []
+
+    const stack = new Stack()
+    stack.push(start)
+    history.add(start)
+
+    while( !stack.isEmpty() ) {
+
+      const node = stack.pop()
+      path.push(node.value)
+
+      node.adjacent.forEach( edge => {
+        if( !history.has(edge) ) {
+          history.add(edge)
+          stack.push(edge)
+        }
+      })
+    }
+    return path
+  }
 
   // this function returns an array of Node values using BFS
-  breadthFirstSearch(start) {}
+  breadthFirstSearch(start) {
+    const history = new Set()
+    const path = []
+
+    const queue = new Queue()
+    queue.enqueue(start)
+    history.add(start)
+
+    while (!queue.isEmpty()) {
+
+      const node = queue.dequeue()
+      path.push(node.value)
+
+      node.adjacent.forEach(edge => {
+        if (!history.has(edge)) {
+          history.add(edge)
+          queue.enqueue(edge)
+        }
+      })
+    }
+    return path
+  }
 }
 
 module.exports = {Graph, Node}
